@@ -2914,146 +2914,37 @@ vec4 frag(vec3 pos, vec2 uv, vec4 color, sampler2D tex) {
   no({
     background: [166, 209, 247]
   });
-  var MOVE_SPEED = 400;
-  var FALL_GAME_OVER = 10 * 64;
-  var MOVE_SPEED_ENEMY = 200;
   loadSprite("grass", "sprites/grass.png");
-  loadSprite("bean", "sprites/bean.png");
-  loadSprite("ghosty", "sprites/ghosty.png");
-  loadSprite("coin", "sprites/coin.png");
-  loadSprite("portal", "sprites/portal.png");
-  scene("game", ({ score, level }) => {
+  scene("game", ({ level }) => {
     const levels = [
       [
-        "                            C            ",
-        "                             C           ",
-        "      C       C               C          ",
-        "      =      ==             ===          ",
-        "                                        O",
-        "    = =  =X     =    ===    =  X   = X  =",
-        "=======  ========  =======  ============"
+        "                                         ",
+        "                                         ",
+        "                                         ",
+        "                                      O  ",
+        "                                         ",
+        "                                         ",
+        "======       ===                         "
       ],
       [
-        "                C                     ",
-        "              ====          C         ",
-        "=                      =  ====        ",
-        "==       ==                           ",
-        "===  ==   X    ===        X  ==    X =",
-        "=== ==================================="
+        "                                         ",
+        "                                         ",
+        "                                         ",
+        "                                         ",
+        "                                         ",
+        "                                         ",
+        "                                         "
       ]
     ];
     const levelConfig = {
       width: 64,
       height: 64,
       "=": () => [
-        sprite("grass"),
-        area(),
-        solid()
-      ],
-      "X": () => [
-        sprite("ghosty"),
-        area(),
-        body(),
-        "enemy",
-        {
-          direction: -1,
-          lastPositionX: 0
-        }
-      ],
-      "C": () => [
-        sprite("coin"),
-        "coin",
-        area()
-      ],
-      "O": () => [
-        sprite("portal"),
-        area(),
-        "portal"
+        sprite("grass")
       ]
     };
     addLevel(levels[level], levelConfig);
-    const player = add([
-      sprite("bean"),
-      pos(0, 0),
-      area(),
-      body(),
-      "player",
-      scale(0.96)
-    ]);
-    const scoreLabel = add([
-      pos(0, 0),
-      text("Score: " + score, { size: 40 }),
-      fixed()
-    ]);
-    add([
-      pos(0, 50),
-      fixed(),
-      text("Level: " + level, { size: 40 })
-    ]);
-    const increaseScore = /* @__PURE__ */ __name((points) => {
-      score = score + points;
-      scoreLabel.text = "Score: " + score;
-    }, "increaseScore");
-    const gameOver = /* @__PURE__ */ __name(() => {
-      player.destroy();
-      go("gameOver");
-    }, "gameOver");
-    keyDown("right", () => {
-      player.move(MOVE_SPEED, 0);
-    });
-    keyDown("left", () => {
-      player.move(-MOVE_SPEED, 0);
-    });
-    keyDown("space", () => {
-      if (player.grounded()) {
-        player.jump();
-      }
-    });
-    action(() => {
-      camPos(player.pos);
-    });
-    action("player", () => {
-      if (player.pos.y > FALL_GAME_OVER) {
-        gameOver();
-      }
-    });
-    action("enemy", (enemy) => {
-      if (enemy.lastPositionX === enemy.pos.x) {
-        enemy.direction = enemy.direction * -1;
-      }
-      enemy.lastPositionX = enemy.pos.x;
-      enemy.move(enemy.direction * MOVE_SPEED_ENEMY, 0);
-    });
-    player.collides("enemy", (enemy) => {
-      if (player.grounded()) {
-        gameOver();
-      } else {
-        enemy.destroy();
-        increaseScore(5);
-      }
-    });
-    player.collides("coin", (coin) => {
-      coin.destroy();
-      increaseScore(1);
-    });
-    player.collides("portal", () => {
-      go("game", { score: score + 5, level: level + 1 });
-    });
   });
-  scene("gameOver", () => {
-    add([
-      pos(0, 0),
-      rect(width(), height()),
-      color(0, 0, 0)
-    ]), add([
-      pos(width() / 2, height() / 2),
-      origin("center"),
-      text("GAME OVER")
-    ]);
-    keyDown("space", () => {
-      go("game", { score: 0, level: 0 });
-    });
-  });
-  go("game", { score: 0, level: 0 });
+  go("game", { level: 0 });
 })();
 //# sourceMappingURL=game.js.map

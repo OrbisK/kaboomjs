@@ -8,11 +8,8 @@ kaboom(
   }
 );
 
-// Wichtige Konstanten
-
 //Sprites laden
 loadSprite("grass", "sprites/grass.png");
-loadSprite("portal", "sprites/portal.png");
 
 //Szene erstellen: game
 scene("game", ({ level }) => {
@@ -25,7 +22,7 @@ scene("game", ({ level }) => {
         "                                      O  ",
         "                                         ",
         "                                         ",
-        "             ===                         ",
+        "======       ===                         ",
       ],
 
       [
@@ -45,32 +42,11 @@ scene("game", ({ level }) => {
     height: 64,
     "=": () => [
       sprite("grass"),
-      area(),
-      solid(),
     ],
-    "O": () =>
-      [
-        sprite("portal"),
-        area(),
-        "portal"
-      ],
   }
 
   //Level laden
   addLevel(levels[level], levelConfig);
-
-  // Spieler hinzufügen
-  const player = add(
-    [
-      sprite("bean"),
-      "player",
-    ]
-  );
-
-  player.collides("portal", () => {
-    go("game", { level: level + 1 })
-  }
-  );
 
 }
 );
